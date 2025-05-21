@@ -31,20 +31,10 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or Postman)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      const msg = `CORS policy blocked ${origin}`;
-      console.warn(msg);
-      return callback(new Error(msg), false);
-    }
-  },
-  credentials: true,
-  exposedHeaders: ["set-cookie"] // For cookie-based auth
+  origin: 'https://neuron-ed-frontend.vercel.app/' , // not '*'
+  credentials: true, // ✅ required to allow cookies/tokens to pass
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 // Security Headers
