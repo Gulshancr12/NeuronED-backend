@@ -24,18 +24,24 @@ app.use(express.json({ limit: "50mb" })); // For large media uploads
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Enhanced CORS Setup
 const allowedOrigins = [
-  process.env.CLIENT_URL, // From .env
+  process.env.CLIENT_URL,
   "http://localhost:5173"
 ];
 
 app.use(cors({
-  origin: 'https://neuron-ed-frontend.vercel.app/' , // not '*'
-  credentials: true, // ✅ required to allow cookies/tokens to pass
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 // Security Headers
 app.use((req, res, next) => {
